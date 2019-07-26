@@ -1,0 +1,47 @@
+- name: Generate client keypair
+  openssh_keypair:
+    path: roles/docker/tasks/demo1/client_ssh_rsa
+- name: Generate demo1 keypair
+  openssh_keypair:
+    path: roles/docker/tasks/demo1/demo1_ssh_rsa
+- name: Copy demo1_pub file to demo2
+  command: cp roles/docker/tasks/demo1/demo1_ssh_rsa.pub roles/docker/tasks/demo2/
+- name: Build docker demo1 image
+  docker_image:
+    name: demo1
+    path: demo1
+    state: build
+- name: Build docker demo2 image
+  docker_image:
+    name: demo2
+    path: demo2
+    state: build
+- name: Create a docker network
+  docker_network:
+    name: demo-network
+- name: Create container demo1
+  docker_container:
+    name: demo1
+    image: demo1:latest
+    network_mode: bridge
+    exposed_ports:
+      - 22
+    published_ports:
+      - "2222:22"
+    networks:
+      - name: demo-network
+    detach: true
+    state: started
+- name: Create container demo2
+  docker_container:
+    name: demo2
+    image: demo2:latest
+    network_mode: bridge
+    exposed_ports:
+      - 22
+    published_ports:
+      - "2223:22"
+    networks:
+      - name: demo-network
+    detach: true
+    state: started
