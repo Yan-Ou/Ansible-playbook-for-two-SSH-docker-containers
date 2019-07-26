@@ -1,5 +1,11 @@
 # Ansible playbook for two SSH docker containers
 
+## Prerequisite
+- Ansible >=2.8.2
+- Python >= 3.7.4
+- Docker SDK for Python >= 4.0.2 (pip3 install docker)
+- Docker engine >= 18.09.2
+
 ## This playbook creates the following resources
 - 2 x docker containers with SSH daemon enabled: demo1, demo2
 - Create docker_root account for demo1 and demo2
